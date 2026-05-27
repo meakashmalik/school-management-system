@@ -1,0 +1,39 @@
+{# Account settings — password change (all roles) #}
+<div data-section="settings" class="dashboard-section">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <div class="lg:col-span-2 card p-6 lg:p-8">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-teal-500 text-white flex items-center justify-center text-2xl font-extrabold shadow-lg shadow-teal-500/20">
+                    {{ session.username[0]|upper }}
+                </div>
+                <div>
+                    <h2 class="text-lg font-extrabold text-slate-800">Account Settings</h2>
+                    <p class="text-sm text-slate-500">{{ session.username }} · <span class="badge badge-teal">{{ session.role }}</span></p>
+                </div>
+            </div>
+            <form action="{{ url_for('change_password') }}" method="POST" class="space-y-4">
+                <div>
+                    <label class="lbl" for="current_password">Current Password</label>
+                    <input type="password" name="current_password" id="current_password" required autocomplete="current-password" class="inp">
+                </div>
+                <div>
+                    <label class="lbl" for="new_password">New Password</label>
+                    <input type="password" name="new_password" id="new_password" required minlength="6" autocomplete="new-password" class="inp">
+                </div>
+                <div>
+                    <label class="lbl" for="confirm_password">Confirm New Password</label>
+                    <input type="password" name="confirm_password" id="confirm_password" required minlength="6" autocomplete="new-password" class="inp">
+                </div>
+                <button type="submit" class="btn-teal w-full">Update Password</button>
+            </form>
+        </div>
+        <div class="lg:col-span-3 card p-6 lg:p-8 bg-gradient-to-br from-white to-teal-50/30">
+            <h3 class="text-sm font-extrabold text-slate-800 mb-4">Security Tips</h3>
+            <ul class="space-y-3 text-sm text-slate-600">
+                <li class="flex gap-3"><span class="text-teal-500">✓</span>Use at least 6 characters with a mix of letters and numbers.</li>
+                <li class="flex gap-3"><span class="text-teal-500">✓</span>Do not share your password with classmates or colleagues.</li>
+                <li class="flex gap-3"><span class="text-teal-500">✓</span>Sign out when using a shared or public computer.</li>
+            </ul>
+        </div>
+    </div>
+</div>

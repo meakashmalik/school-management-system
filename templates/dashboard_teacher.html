@@ -1,0 +1,193 @@
+{% extends "base_dashboard.html" %}
+{% block title %}Teacher Dashboard{% endblock %}
+{% block page_heading %}Teacher Portal{% endblock %}
+{% block page_subheading %}Attendance, marks entry & notices{% endblock %}
+
+{% block sidebar_nav %}
+<a href="#overview" data-nav="overview" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">
+    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"/></svg> Dashboard</a>
+<a href="#attendance" data-nav="attendance" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">
+    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg> Attendance</a>
+<a href="#marks" data-nav="marks" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">
+    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg> Marks Entry</a>
+<a href="#notices" data-nav="notices" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">
+    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg> Notices</a>
+<a href="#events" data-nav="events" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">
+    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg> Events</a>
+<a href="#settings" data-nav="settings" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">
+    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg> Settings</a>
+{% endblock %}
+
+{% block right_panel %}
+<aside class="hidden xl:flex flex-col w-80 shrink-0 border-l border-slate-100 bg-white/60 p-6 gap-6 overflow-y-auto">
+    <div>
+        <h3 class="text-sm font-extrabold text-slate-800 mb-4">Recent Activity</h3>
+        <div class="space-y-4">
+            {% for act in recent_activity %}
+            <div class="flex gap-3">
+                <div class="w-8 h-8 rounded-full bg-teal-50 flex items-center justify-center shrink-0 text-sm">{% if act.icon=='notice' %}📢{% elif act.icon=='fee' %}💰{% else %}📝{% endif %}</div>
+                <div><p class="text-sm text-slate-700 leading-snug">{{ act.text }}</p><p class="text-[11px] text-slate-400 mt-0.5">{{ act.date }}</p></div>
+            </div>
+            {% else %}<p class="text-sm text-slate-400">No recent activity.</p>{% endfor %}
+        </div>
+    </div>
+    <div>
+        <h3 class="text-sm font-extrabold text-slate-800 mb-3">Quick Actions</h3>
+        <div class="space-y-2">
+            <a href="#attendance" data-nav="attendance" class="btn-teal block text-center">Mark Attendance</a>
+            <a href="#marks" data-nav="marks" class="btn-teal block text-center">Enter Marks</a>
+            <a href="#notices" data-nav="notices" class="btn-outline block text-center">Post Notice</a>
+        </div>
+    </div>
+    {% include "_events_widget.html" %}
+</aside>
+{% endblock %}
+
+{% block content %}
+
+<div data-section="overview" class="dashboard-section space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="card p-6 flex justify-between items-start">
+            <div><p class="text-xs font-semibold uppercase text-slate-500">Total Students</p><p class="text-4xl font-extrabold text-slate-800 mt-2">{{ total_students }}</p></div>
+            <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2a3 3 0 00-5.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+        </div>
+        <div class="card p-6 flex justify-between items-start">
+            <div><p class="text-xs font-semibold uppercase text-slate-500">Avg Attendance</p><p class="text-4xl font-extrabold text-teal-600 mt-2">{{ "%.0f"|format(avg_attendance) }}%</p></div>
+            <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+        </div>
+        <div class="card p-6 flex justify-between items-start">
+            <div><p class="text-xs font-semibold uppercase text-slate-500">Active Notices</p><p class="text-4xl font-extrabold text-slate-800 mt-2">{{ notice_count }}</p></div>
+            <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>
+        </div>
+    </div>
+    <div class="card p-6 lg:p-8">
+        <h2 class="text-lg font-extrabold text-slate-800 mb-4">Academic Overview</h2>
+        <div class="flex items-center justify-center h-32 bg-slate-50 rounded-xl border border-slate-100">
+            <div class="text-center">
+                <p class="text-3xl font-extrabold text-teal-600">{{ "%.1f"|format(avg_attendance) }}%</p>
+                <p class="text-sm text-slate-500 mt-1">Campus-wide average attendance</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div data-section="attendance" class="dashboard-section">
+    <div class="card overflow-hidden">
+        <div class="px-4 py-2.5 border-b border-slate-100"><h2 class="text-base font-bold text-slate-800">Daily Attendance</h2></div>
+        <div class="p-4 bg-slate-50/50 border-b border-slate-100">
+            <form method="GET" action="{{ url_for('dashboard') }}#attendance" class="flex flex-wrap gap-3 items-end">
+                <div><label class="lbl">Date</label><input type="date" name="date" value="{{ attendance_date }}" class="inp w-auto py-1.5 text-sm"></div>
+                <div><label class="lbl">Class</label><select name="class" class="inp w-auto py-1.5 text-sm"><option value="">All</option>{% for c in classes %}<option value="{{ c.class }}" {% if class_filter==c.class %}selected{% endif %}>Class {{ c.class }}</option>{% endfor %}</select></div>
+                <button type="submit" class="btn-outline text-sm py-1.5">Load</button>
+            </form>
+        </div>
+        <div class="px-4 py-2 border-b border-slate-100 bg-white">
+            <input type="search" id="filter-attendance-students" placeholder="Search students by name, roll no, or class…" class="inp max-w-md py-1.5 text-sm" autocomplete="off">
+        </div>
+        <form action="{{ url_for('save_attendance') }}" method="POST">
+            <input type="hidden" name="attendance_date" value="{{ attendance_date }}"><input type="hidden" name="class_filter" value="{{ class_filter }}">
+            <div class="js-table-paginate border-b border-slate-100" data-table-target="table-attendance-students" data-page-size="10" data-pagination-page="1">
+            <div class="overflow-x-auto"><table id="table-attendance-students" class="tbl data-table"><thead><tr><th>Roll</th><th>Student</th><th>Class</th><th>Status</th></tr></thead><tbody>
+            {% for s in students %}<tr data-search="{{ s.roll_no }} {{ s.name }} {{ s.class }}" data-page-row><td class="font-mono text-teal-600">{{ s.roll_no }}</td><td class="font-medium">{{ s.name }}</td><td>{{ s.class }}</td>
+                <td><select name="status_{{ s.roll_no }}" class="inp py-1.5 px-3 text-sm w-auto">{% for st in attendance_statuses %}<option value="{{ st }}" {% if attendance_map.get(s.roll_no)==st %}selected{% endif %}>{{ st }}</option>{% endfor %}</select></td></tr>
+            {% else %}<tr><td colspan="4" class="empty">No students found.</td></tr>{% endfor %}
+            </tbody></table></div>
+            {% if students %} {% include '_pagination_bar.html' %} {% endif %}
+            </div>
+            {% if students %}<div class="px-4 py-2 border-t border-slate-100 flex justify-end"><button type="submit" class="btn-teal text-sm py-1.5">Save Attendance</button></div>{% endif %}
+        </form>
+    </div>
+    {% include "_attendance_lookup.html" %}
+</div>
+
+<div data-section="marks" class="dashboard-section">
+    <div class="grid grid-cols-1 xl:grid-cols-5 gap-6">
+        <div class="xl:col-span-2 card p-4">
+            <h2 class="text-base font-bold text-slate-800 mb-3">Enter Marks</h2>
+            <form action="{{ url_for('save_marks') }}" method="POST" class="space-y-3">
+                <div><label class="lbl">Student</label><select name="roll_no" required class="inp py-1.5 text-sm"><option value="">Select</option>{% for s in all_students %}<option value="{{ s.roll_no }}">{{ s.roll_no }} — {{ s.name }}</option>{% endfor %}</select></div>
+                <div><label class="lbl">Subject</label><input name="subject" required class="inp py-1.5 text-sm"></div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div><label class="lbl">Obtained</label><input type="number" name="marks_obtained" required min="0" step="0.5" class="inp py-1.5 text-sm"></div>
+                    <div><label class="lbl">Total</label><input type="number" name="total_marks" value="100" required min="1" class="inp py-1.5 text-sm"></div>
+                </div>
+                <div><label class="lbl">Exam Type</label><select name="exam_type" class="inp py-1.5 text-sm">{% for e in exam_types %}<option>{{ e }}</option>{% endfor %}</select></div>
+                <button type="submit" class="btn-teal w-full text-sm py-1.5">Save Marks</button>
+            </form>
+        </div>
+        <div class="xl:col-span-3 card overflow-hidden">
+            <div class="px-4 py-2.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <h2 class="text-base font-bold text-slate-800">Recent Marks</h2>
+                <input type="search" id="filter-recent-marks" placeholder="Search by name, roll, or class…" class="inp max-w-xs py-1.5 text-sm" autocomplete="off">
+            </div>
+            <div class="js-table-paginate border-b border-slate-100" data-table-target="table-recent-marks" data-page-size="10" data-pagination-page="1">
+            <div class="overflow-x-auto"><table id="table-recent-marks" class="tbl data-table"><thead><tr><th>Roll</th><th>Student</th><th>Class</th><th>Subject</th><th>Score</th><th>%</th><th>Grade</th><th>Exam</th></tr></thead><tbody>
+            {% for m in recent_marks %}<tr data-search="{{ m.roll_no }} {{ m.name }} {{ m.class }} {{ m.subject }}" data-page-row><td class="font-mono text-teal-600">{{ m.roll_no }}</td><td class="font-medium">{{ m.name }}</td><td>{{ m.class }}</td><td>{{ m.subject }}</td><td><span class="font-semibold">{{ m.marks_obtained|int }}</span><span class="text-slate-400">/{{ m.total_marks|int }}</span></td><td class="font-semibold text-teal-600">{{ "%.1f"|format(mark_pct(m)) }}%</td><td><span class="badge {{ mark_grade(m)|grade_badge }}">{{ mark_grade(m) }}</span></td><td><span class="badge badge-slate">{{ m.exam_type }}</span></td></tr>
+            {% else %}<tr><td colspan="8" class="empty">No marks recorded.</td></tr>{% endfor %}
+            </tbody></table></div>
+            {% if recent_marks %} {% include '_pagination_bar.html' %} {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div data-section="notices" class="dashboard-section">
+    <div class="grid grid-cols-1 xl:grid-cols-5 gap-6">
+        <div class="xl:col-span-2 card p-6">
+            <h2 class="text-lg font-extrabold text-slate-800 mb-4">Post Notice</h2>
+            <form action="{{ url_for('add_notice') }}" method="POST" class="space-y-4">
+                <div><label class="lbl">Title</label><input name="title" required class="inp"></div>
+                <div><label class="lbl">Date</label><input type="date" name="date_posted" value="{{ today }}" required class="inp"></div>
+                <div><label class="lbl">Message</label><textarea name="message" rows="5" required class="inp resize-none"></textarea></div>
+                <button type="submit" class="btn-teal w-full">Publish Notice</button>
+            </form>
+        </div>
+        <div class="xl:col-span-3 card overflow-hidden">
+            <div class="px-6 py-5 border-b border-slate-100"><h2 class="text-lg font-extrabold text-slate-800">All Notices</h2></div>
+            <div class="divide-y divide-slate-100 max-h-[480px] overflow-y-auto">
+                {% for notice in notices %}
+                <article class="px-6 py-4 hover:bg-slate-50"><div class="flex justify-between gap-2 mb-1"><h3 class="font-semibold text-slate-800">{{ notice.title }}</h3><time class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">{{ notice.date_posted }}</time></div><p class="text-sm text-slate-500">{{ notice.message }}</p></article>
+                {% else %}<p class="empty">No notices yet.</p>{% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- EVENTS -->
+<div data-section="events" class="dashboard-section">
+    <div class="card p-6 lg:p-8">
+        <h2 class="text-lg font-extrabold text-slate-800 mb-2">Upcoming Academic Events</h2>
+        <p class="text-sm text-slate-500 mb-6">School calendar timeline sorted by date</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% for ev in upcoming_events %}
+            <div class="flex gap-4 p-4 bg-white border border-slate-100 rounded-xl hover:border-teal-100 hover:shadow-sm transition">
+                <div class="w-14 shrink-0 text-center bg-teal-50 rounded-xl py-2 border border-teal-100">
+                    <p class="text-[10px] uppercase font-bold text-teal-600">{{ ev.event_date[5:7] }}/{{ ev.event_date[8:10] }}</p>
+                    <p class="text-lg font-extrabold text-slate-800">{{ ev.event_date[0:4] }}</p>
+                </div>
+                <div><p class="font-semibold text-slate-800">{{ ev.event_name }}</p><p class="text-sm text-slate-500 mt-1">{{ ev.event_description }}</p></div>
+            </div>
+            {% else %}<p class="empty col-span-2">No upcoming events scheduled.</p>{% endfor %}
+        </div>
+    </div>
+</div>
+
+{% include "_settings_section.html" %}
+
+<div class="xl:hidden card p-4 mt-6">
+    <div class="grid grid-cols-3 gap-2">
+        <a href="#attendance" data-nav="attendance" class="btn-teal text-center text-xs py-2.5">Attendance</a>
+        <a href="#marks" data-nav="marks" class="btn-teal text-center text-xs py-2.5">Marks</a>
+        <a href="#notices" data-nav="notices" class="btn-outline text-center text-xs py-2.5">Notice</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+window.setupTableFilters = function () {
+    initTableFilter('filter-attendance-students', 'table-attendance-students');
+    initTableFilter('filter-recent-marks', 'table-recent-marks');
+};
+</script>
+{% endblock %}

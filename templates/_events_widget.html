@@ -1,0 +1,22 @@
+{# Upcoming Academic Events — sidebar widget (all roles) #}
+<div>
+    <h3 class="text-sm font-extrabold text-slate-800 mb-4 flex items-center gap-2">
+        <span class="w-7 h-7 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center text-xs">📅</span>
+        Upcoming Events
+    </h3>
+    <div class="space-y-0 relative">
+        {% for ev in upcoming_events %}
+        <div class="flex gap-3 pb-4 {% if not loop.last %}border-l-2 border-teal-100 ml-3 pl-4{% else %}ml-3 pl-4 border-l-2 border-transparent{% endif %} relative">
+            <div class="absolute -left-[5px] top-1 w-2.5 h-2.5 rounded-full bg-teal-500 ring-4 ring-white"></div>
+            <div class="min-w-0">
+                <time class="text-[10px] font-semibold uppercase tracking-wide text-teal-600">{{ ev.event_date }}</time>
+                <p class="text-sm font-semibold text-slate-800 mt-0.5 leading-snug">{{ ev.event_name }}</p>
+                <p class="text-xs text-slate-500 mt-0.5 line-clamp-2">{{ ev.event_description }}</p>
+            </div>
+        </div>
+        {% else %}
+        <p class="text-sm text-slate-400 bg-slate-50 rounded-xl p-4 border border-slate-100">No upcoming events scheduled.</p>
+        {% endfor %}
+    </div>
+    <a href="#events" data-nav="events" class="btn-outline block text-center w-full text-xs mt-2">View All Events</a>
+</div>

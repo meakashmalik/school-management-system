@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS — Sign In</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="min-h-screen bg-slate-50 font-sans antialiased">
+
+<div class="min-h-screen flex flex-col lg:flex-row">
+    <!-- Brand panel -->
+    <div class="lg:w-1/2 bg-gradient-to-br from-teal-500 via-teal-600 to-cyan-700 p-10 lg:p-16 flex flex-col justify-center text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-20 left-10 w-64 h-64 rounded-full bg-white blur-3xl"></div>
+            <div class="absolute bottom-10 right-10 w-48 h-48 rounded-full bg-white blur-2xl"></div>
+        </div>
+        <div class="relative z-10 max-w-md">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-extrabold tracking-tight">SMS</p>
+                    <p class="text-teal-100 text-sm">School Management System</p>
+                </div>
+            </div>
+            <h1 class="text-3xl lg:text-4xl font-extrabold leading-tight mb-4">Enterprise ERP for modern schools</h1>
+            <p class="text-teal-50/90 text-lg leading-relaxed">Manage students, fees, attendance, library, and academics from one clean dashboard.</p>
+            <ul class="mt-10 space-y-3 text-sm text-teal-50">
+                <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white"></span> Role-based Admin, Teacher & Student portals</li>
+                <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white"></span> Real-time analytics & activity tracking</li>
+                <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white"></span> Secure session-based authentication</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Login form -->
+    <div class="flex-1 flex items-center justify-center p-6 lg:p-12">
+        <div class="w-full max-w-md">
+            <div class="bg-white border border-slate-100 rounded-2xl shadow-md shadow-slate-200/50 p-8 lg:p-10">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-extrabold text-slate-800">Welcome back</h2>
+                    <p class="text-slate-500 mt-1">Sign in to your SMS account</p>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                      {% if category == 'success' %}
+                      <div class="bg-teal-50 border border-teal-100 text-teal-800 p-3 rounded-xl text-sm mb-4">{{ message }}</div>
+                      {% elif category == 'info' %}
+                      <div class="bg-sky-50 border border-sky-100 text-sky-800 p-3 rounded-xl text-sm mb-4">{{ message }}</div>
+                      {% else %}
+                      <div class="bg-rose-50 border border-rose-100 text-rose-800 p-3 rounded-xl text-sm mb-4">{{ message }}</div>
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+
+                <form action="{{ url_for('login') }}" method="POST" class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5">Username</label>
+                        <input type="text" name="username" required autofocus
+                               class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5">Password</label>
+                        <input type="password" name="password" required
+                               class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 transition">
+                    </div>
+                    <button type="submit" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-4 rounded-xl shadow-md shadow-teal-500/25 transition">
+                        Sign In
+                    </button>
+                </form>
+
+                <div class="mt-8 pt-6 border-t border-slate-100">
+                    <p class="text-xs text-slate-400 text-center uppercase tracking-wider mb-3">Demo credentials</p>
+                    <div class="grid grid-cols-1 gap-2 text-xs text-slate-600">
+                        <div class="flex justify-between bg-slate-50 rounded-lg px-3 py-2"><span class="font-medium">Admin</span><span class="font-mono text-slate-500">admin / admin123</span></div>
+                        <div class="flex justify-between bg-slate-50 rounded-lg px-3 py-2"><span class="font-medium">Teachers</span><span class="font-mono text-slate-500">teacher1–5 / teacher123</span></div>
+                        <div class="flex justify-between bg-slate-50 rounded-lg px-3 py-2"><span class="font-medium">Students</span><span class="font-mono text-slate-500">student1–3 / student123</span></div>
+                    </div>
+                    <p class="text-[11px] text-slate-400 text-center mt-3">56 demo students seeded (rolls 1001–1056)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

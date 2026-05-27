@@ -1,0 +1,659 @@
+{% extends "base_dashboard.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block page_heading %}Dashboard{% endblock %}
+{% block page_subheading %}Academic overview and school operations{% endblock %}
+
+{% macro nav_icon(d) %}
+<svg class="w-5 h-5 shrink-0 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ d }}"/></svg>
+{% endmacro %}
+
+{% macro btn_edit(onclick) %}
+<button type="button" onclick="{{ onclick }}" class="text-indigo-600 hover:text-indigo-900 font-semibold text-xs px-2 py-0.5 rounded-md hover:bg-indigo-50 transition">Edit</button>
+{% endmacro %}
+
+{% macro btn_delete(action, label) %}
+<form action="{{ action }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete {{ label }}?');">
+    <button type="submit" class="text-red-600 hover:text-red-900 font-semibold text-xs px-2 py-0.5 rounded-md hover:bg-red-50 transition">Delete</button>
+</form>
+{% endmacro %}
+
+{% block sidebar_nav %}
+<a href="#overview" data-nav="overview" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">{{ nav_icon('M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z') }} Dashboard</a>
+<a href="#students" data-nav="students" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">{{ nav_icon('M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197') }} Students</a>
+<a href="#users" data-nav="users" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">{{ nav_icon('M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2') }} Teachers</a>
+<a href="#fees" data-nav="fees" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">{{ nav_icon('M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M21 12a9 9 0 11-18 0 9 9 0 0118 0z') }} Fees</a>
+<a href="#grades" data-nav="grades" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">{{ nav_icon('M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z') }} Grade Book</a>
+<a href="#attendance" data-nav="attendance" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">{{ nav_icon('M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z') }} Attendance</a>
+<a href="#library" data-nav="library" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">{{ nav_icon('M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13') }} Library</a>
+<a href="#reports" data-nav="reports" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">{{ nav_icon('M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z') }} Reports</a>
+<a href="#notices" data-nav="notices" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">{{ nav_icon('M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6') }} Notices</a>
+<a href="#events" data-nav="events" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">{{ nav_icon('M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z') }} Events</a>
+<a href="#settings" data-nav="settings" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">{{ nav_icon('M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z') }} Settings</a>
+{% endblock %}
+
+{% block right_panel %}
+<aside class="hidden xl:flex flex-col w-80 shrink-0 border-l border-slate-100 bg-white/60 p-6 gap-6 overflow-y-auto">
+    <div>
+        <h3 class="text-sm font-extrabold text-slate-800 mb-4">Recent Activity</h3>
+        <div class="space-y-4">
+            {% for act in recent_activity %}
+            <div class="flex gap-3">
+                <div class="w-8 h-8 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 text-sm">{% if act.icon=='notice' %}📢{% elif act.icon=='fee' %}💰{% else %}📝{% endif %}</div>
+                <div><p class="text-sm text-slate-700 leading-snug">{{ act.text }}</p><p class="text-[11px] text-slate-400 mt-0.5">{{ act.date }}</p></div>
+            </div>
+            {% else %}<p class="text-sm text-slate-400">No recent activity.</p>{% endfor %}
+        </div>
+    </div>
+    <div>
+        <h3 class="text-sm font-extrabold text-slate-800 mb-3">Quick Actions</h3>
+        <div class="space-y-2">
+            <button type="button" onclick="openModal('modal-student-add')" class="btn-teal block text-center w-full">Add Student</button>
+            <button type="button" onclick="openModal('modal-notice-add')" class="btn-teal block text-center w-full">Post Notice</button>
+            <a href="#reports" data-nav="reports" class="btn-outline block text-center w-full">Generate Report</a>
+        </div>
+    </div>
+    {% include "_events_widget.html" %}
+</aside>
+{% endblock %}
+
+{% block content %}
+
+<!-- OVERVIEW (unchanged charts) -->
+<div data-section="overview" class="dashboard-section space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="card p-6 flex items-start justify-between">
+            <div><p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Students</p><p class="text-4xl font-extrabold text-slate-800 mt-2">{{ total_students }}</p></div>
+            <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2a3 3 0 00-5.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+        </div>
+        <div class="card p-6">
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Fees Collected</p>
+            <p class="text-4xl font-extrabold text-slate-800 mt-2">₹{{ "%.0f"|format(total_fees) }}</p>
+            <div class="flex justify-between text-xs text-slate-500 mt-3 mb-1"><span>Collection rate</span><span class="font-semibold text-teal-600">{{ "%.0f"|format(fee_paid_percent) }}% paid</span></div>
+            <div class="w-full bg-slate-100 rounded-full h-2"><div class="bg-teal-500 h-2 rounded-full" style="width:{{ fee_paid_percent|int }}%"></div></div>
+        </div>
+        <div class="card p-6 flex items-start justify-between">
+            <div><p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Active Notices</p><p class="text-4xl font-extrabold text-slate-800 mt-2">{{ notice_count }}</p></div>
+            <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>
+        </div>
+    </div>
+    <div class="card p-6 lg:p-8">
+        <h2 class="text-lg font-extrabold text-slate-800 mb-6">Academic Overview</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div>
+                <p class="text-sm font-semibold text-slate-700 mb-4">Enrollment by Class</p>
+                {% set ns = namespace(max=1) %}{% for row in class_strength %}{% if row.count > ns.max %}{% set ns.max = row.count %}{% endif %}{% endfor %}
+                <div class="flex items-end justify-between gap-2 h-36">{% for row in class_strength %}<div class="flex-1 flex flex-col items-center gap-2"><div class="w-full bg-teal-400 rounded-t-lg" style="height:{{ (row.count / ns.max * 100)|int if ns.max else 0 }}%;min-height:8px"></div><span class="text-[10px] text-slate-500">C{{ row.class }}</span></div>{% endfor %}</div>
+            </div>
+            <div>
+                <p class="text-sm font-semibold text-slate-700 mb-4">Fee Status</p>
+                {% set fee_total = fee_status.values()|sum if fee_status else 0 %}
+                <div class="space-y-3">{% for status in fee_statuses %}{% set count = fee_status.get(status, 0) %}<div><div class="flex justify-between text-xs mb-1"><span>{{ status }}</span><span class="text-teal-600 font-semibold">{{ count }}</span></div><div class="w-full bg-slate-100 rounded-full h-2"><div class="bg-teal-500 h-2 rounded-full" style="width:{{ (count / fee_total * 100)|int if fee_total else 0 }}%"></div></div></div>{% endfor %}</div>
+            </div>
+            <div class="flex flex-col items-center justify-center">
+                <p class="text-sm font-semibold text-slate-700 mb-4">Avg Attendance</p>
+                <p class="text-4xl font-extrabold text-teal-600">{{ "%.0f"|format(avg_attendance) }}%</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- STUDENTS CRUD -->
+<div data-section="students" class="dashboard-section">
+    <div class="card overflow-hidden bg-white">
+        <div class="px-4 py-2.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div><h2 class="text-base font-bold text-slate-800">Student Management</h2><p class="text-xs text-slate-500">{{ total_students }} enrolled students</p></div>
+            <button type="button" onclick="openModal('modal-student-add')" class="btn-teal">+ Add Student</button>
+        </div>
+        <div class="px-4 py-2 border-b border-slate-100 bg-slate-50/40 flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between">
+            <input type="search" id="filter-students" placeholder="Search by name, roll no, or class…" class="inp max-w-md flex-1 py-1.5 text-sm" autocomplete="off">
+            <a href="{{ url_for('export_table', table_name='students') }}" class="btn-teal shrink-0 text-center text-sm py-1.5">📥 Export to Excel</a>
+        </div>
+        <div class="js-table-paginate border-b border-slate-100" data-table-target="table-students" data-page-size="10" data-pagination-page="1">
+            <div class="overflow-x-auto">
+            <table id="table-students" class="data-table min-w-full divide-y divide-gray-200">
+                <thead class="bg-slate-50"><tr>
+                    <th class="text-left">Roll</th>
+                    <th class="text-left">Name</th>
+                    <th class="text-left">Class</th>
+                    <th class="text-left">Section</th>
+                    <th class="text-left">Gender</th>
+                    <th class="text-left">Contact</th>
+                    <th class="text-right">Actions</th>
+                </tr></thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                {% for s in students %}
+                <tr class="hover:bg-slate-50" data-search="{{ s.roll_no }} {{ s.name }} {{ s.class }} {{ s.section or '' }}" data-page-row>
+                    <td class="font-mono text-teal-600 font-medium">{{ s.roll_no }}</td>
+                    <td class="font-semibold text-slate-800">{{ s.name }}</td>
+                    <td class="text-slate-600">{{ s.class }}</td>
+                    <td class="text-slate-600">{{ s.section or '—' }}</td>
+                    <td class="text-slate-600">{{ s.gender or '—' }}</td>
+                    <td class="text-slate-600">{{ s.contact or '—' }}</td>
+                    <td class="text-right whitespace-nowrap space-x-1">
+                        {{ btn_edit("openStudentEdit('" ~ s.roll_no ~ "','" ~ s.name ~ "','" ~ s.class ~ "','" ~ (s.section or '') ~ "','" ~ (s.gender or '') ~ "','" ~ (s.dob or '') ~ "','" ~ (s.contact or '') ~ "')") }}
+                        {{ btn_delete(url_for('delete_student', roll_no=s.roll_no), 'student ' ~ s.roll_no) }}
+                    </td>
+                </tr>
+                {% else %}<tr><td colspan="7" class="px-4 py-6 text-center text-slate-400 text-xs">No students registered.</td></tr>{% endfor %}
+                </tbody>
+            </table>
+            </div>
+            {% if students %} {% include '_pagination_bar.html' %} {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- TEACHERS CRUD -->
+<div data-section="users" class="dashboard-section">
+    <div class="card overflow-hidden bg-white">
+        <div class="px-4 py-2.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div><h2 class="text-base font-bold text-slate-800">Teacher Accounts</h2><p class="text-xs text-slate-500">{{ teachers|length }} teacher login(s)</p></div>
+            <button type="button" onclick="openModal('modal-teacher-add')" class="btn-teal">+ Add Teacher</button>
+        </div>
+        <div class="js-table-paginate border-b border-slate-100" data-table-target="table-teachers" data-page-size="5" data-pagination-page="1">
+            <div class="overflow-x-auto">
+            <table id="table-teachers" class="data-table min-w-full divide-y divide-gray-200">
+                <thead class="bg-slate-50"><tr>
+                    <th class="text-left">ID</th>
+                    <th class="text-left">Username</th>
+                    <th class="text-left">Role</th>
+                    <th class="text-right">Actions</th>
+                </tr></thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                {% for t in teachers %}
+                <tr class="hover:bg-slate-50" data-page-row>
+                    <td class="text-slate-400">#{{ t.id }}</td>
+                    <td class="font-semibold text-slate-800">{{ t.username }}</td>
+                    <td><span class="badge badge-teal">{{ t.role }}</span></td>
+                    <td class="text-right whitespace-nowrap space-x-1">
+                        {{ btn_edit("openTeacherEdit(" ~ t.id ~ ",'" ~ t.username ~ "')") }}
+                        {{ btn_delete(url_for('delete_teacher', user_id=t.id), 'teacher ' ~ t.username) }}
+                    </td>
+                </tr>
+                {% else %}<tr><td colspan="4" class="px-4 py-6 text-center text-slate-400 text-xs">No teachers found.</td></tr>{% endfor %}
+                </tbody>
+            </table>
+            </div>
+            {% if teachers %} {% include '_pagination_bar.html' %} {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- FEES CRUD -->
+<div data-section="fees" class="dashboard-section">
+    <div class="card overflow-hidden bg-white">
+        <div class="px-4 py-2.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div><h2 class="text-base font-bold text-slate-800">Fees Management</h2></div>
+            <div class="flex flex-wrap gap-2 items-center">
+                <select class="inp py-1.5 px-3 text-sm w-auto" onchange="window.location='{{ url_for('dashboard') }}?fee_class='+encodeURIComponent(this.value)+'#fees'">
+                    <option value="">All Classes</option>{% for c in classes %}<option value="{{ c.class }}" {% if fee_class_filter==c.class %}selected{% endif %}>Class {{ c.class }}</option>{% endfor %}
+                </select>
+                <button type="button" onclick="openModal('modal-fee-add')" class="btn-teal text-sm py-1.5">+ Record Fee</button>
+            </div>
+        </div>
+        <div class="px-4 py-2 border-b border-slate-100 bg-slate-50/40 flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between">
+            <input type="search" id="filter-fees" placeholder="Search by name, roll no, or class…" class="inp max-w-md flex-1 py-1.5 text-sm" autocomplete="off">
+            <a href="{{ url_for('export_table', table_name='fees') }}" class="btn-teal shrink-0 text-center text-sm py-1.5">📥 Export to Excel</a>
+        </div>
+        <div class="js-table-paginate border-b border-slate-100" data-table-target="table-fees" data-page-size="10" data-pagination-page="1">
+            <div class="overflow-x-auto">
+            <table id="table-fees" class="data-table min-w-full divide-y divide-gray-200">
+                <thead class="bg-slate-50"><tr>
+                    <th class="text-left">Invoice</th>
+                    <th class="text-left">Roll</th>
+                    <th class="text-left">Student</th>
+                    <th class="text-left">Amount</th>
+                    <th class="text-left">Date</th>
+                    <th class="text-left">Status</th>
+                    <th class="text-right">Actions</th>
+                </tr></thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                {% for f in fees %}
+                <tr class="hover:bg-slate-50" data-search="{{ f.roll_no }} {{ f.name }} {{ f.class }}" data-page-row>
+                    <td class="text-slate-400">#{{ f.invoice_no }}</td>
+                    <td class="font-mono text-teal-600">{{ f.roll_no }}</td>
+                    <td class="font-medium text-slate-800">{{ f.name }}</td>
+                    <td class="font-semibold text-teal-700">₹{{ "%.0f"|format(f.amount_paid) }}</td>
+                    <td class="text-slate-600">{{ f.payment_date }}</td>
+                    <td><span class="badge {% if f.status=='Paid' %}badge-teal{% elif f.status=='Partial' %}badge-amber{% else %}badge-rose{% endif %}">{{ f.status }}</span></td>
+                    <td class="text-right whitespace-nowrap space-x-1">
+                        {% if f.status == 'Paid' %}
+                        <a href="{{ url_for('view_receipt', invoice_no=f.invoice_no) }}" target="_blank" class="text-teal-600 hover:text-teal-900 font-semibold text-xs px-2 py-0.5 rounded-md hover:bg-teal-50 transition inline-block">📄 Receipt</a>
+                        {% endif %}
+                        {{ btn_edit("openFeeEdit(" ~ f.invoice_no ~ ",'" ~ f.roll_no ~ "'," ~ f.amount_paid ~ ",'" ~ f.payment_date ~ "','" ~ f.status ~ "')") }}
+                        {{ btn_delete(url_for('delete_fee', invoice_no=f.invoice_no), 'invoice #' ~ f.invoice_no) }}
+                    </td>
+                </tr>
+                {% else %}<tr><td colspan="7" class="px-4 py-6 text-center text-slate-400 text-xs">No fee records.</td></tr>{% endfor %}
+                </tbody>
+            </table>
+            </div>
+            {% if fees %} {% include '_pagination_bar.html' %} {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- GRADE BOOK -->
+<div data-section="grades" class="dashboard-section">
+    <div class="card overflow-hidden bg-white">
+        <div class="px-4 py-2.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div>
+                <h2 class="text-base font-bold text-slate-800">Master Grade Book</h2>
+                <p class="text-xs text-slate-500">{{ grade_book|length }} mark record(s) · auto-graded on entry</p>
+            </div>
+            <a href="{{ url_for('export_table', table_name='marks') }}" class="btn-teal shrink-0 text-center text-sm py-1.5">📥 Export to Excel</a>
+        </div>
+        <div class="px-4 py-2 border-b border-slate-100 bg-slate-50/40">
+            <input type="search" id="filter-grades" placeholder="Search by name, roll no, class, or subject…" class="inp max-w-md py-1.5 text-sm" autocomplete="off">
+        </div>
+        <div class="js-table-paginate border-b border-slate-100" data-table-target="table-grades" data-page-size="10" data-pagination-page="1">
+            <div class="overflow-x-auto">
+            <table id="table-grades" class="data-table min-w-full divide-y divide-gray-200">
+                <thead class="bg-slate-50"><tr>
+                    <th class="text-left">Roll</th>
+                    <th class="text-left">Student</th>
+                    <th class="text-left">Class</th>
+                    <th class="text-left">Subject</th>
+                    <th class="text-left">Score</th>
+                    <th class="text-left">%</th>
+                    <th class="text-left">Grade</th>
+                    <th class="text-left">Exam</th>
+                </tr></thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                {% for g in grade_book %}
+                <tr class="hover:bg-slate-50" data-search="{{ g.roll_no }} {{ g.name }} {{ g.class }} {{ g.subject }} {{ g.exam_type }}" data-page-row>
+                    <td class="font-mono text-teal-600">{{ g.roll_no }}</td>
+                    <td class="font-semibold text-slate-800">{{ g.name }}</td>
+                    <td class="text-slate-600">{{ g.class }}</td>
+                    <td class="text-slate-800">{{ g.subject }}</td>
+                    <td><span class="font-semibold">{{ g.marks_obtained|int }}</span><span class="text-slate-400">/{{ g.total_marks|int }}</span></td>
+                    <td class="font-semibold text-teal-600">{{ "%.1f"|format(mark_pct(g)) }}%</td>
+                    <td><span class="badge {{ mark_grade(g)|grade_badge }}">{{ mark_grade(g) }}</span></td>
+                    <td><span class="badge badge-slate">{{ g.exam_type }}</span></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="8" class="px-4 py-6 text-center text-slate-400 text-xs">No marks recorded yet.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            {% if grade_book %} {% include '_pagination_bar.html' %} {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- ATTENDANCE (existing bulk save) -->
+<div data-section="attendance" class="dashboard-section">
+    <div class="card overflow-hidden bg-white">
+        <div class="px-4 py-2.5 border-b border-slate-100"><h2 class="text-base font-bold text-slate-800">Attendance Tracking</h2></div>
+        <div class="p-4 bg-slate-50/50 border-b border-slate-100">
+            <form method="GET" action="{{ url_for('dashboard') }}#attendance" class="flex flex-wrap gap-3 items-end">
+                <div><label class="lbl">Date</label><input type="date" name="date" value="{{ attendance_date }}" class="inp w-auto py-1.5 text-sm"></div>
+                <div><label class="lbl">Class</label><select name="class" class="inp w-auto py-1.5 text-sm"><option value="">All</option>{% for c in classes %}<option value="{{ c.class }}" {% if class_filter==c.class %}selected{% endif %}>Class {{ c.class }}</option>{% endfor %}</select></div>
+                <button type="submit" class="btn-outline text-sm py-1.5">Load</button>
+            </form>
+        </div>
+        <form action="{{ url_for('save_attendance') }}" method="POST">
+            <input type="hidden" name="attendance_date" value="{{ attendance_date }}"><input type="hidden" name="class_filter" value="{{ class_filter }}">
+            <div class="js-table-paginate border-b border-slate-100" data-table-target="table-admin-attendance" data-page-size="10" data-pagination-page="1">
+                <div class="overflow-x-auto">
+                <table id="table-admin-attendance" class="data-table min-w-full divide-y divide-gray-200">
+                    <thead class="bg-slate-50"><tr><th class="text-left">Roll</th><th class="text-left">Name</th><th class="text-left">Class</th><th class="text-left">Status</th></tr></thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    {% for s in att_students %}<tr data-page-row><td class="font-mono text-teal-600">{{ s.roll_no }}</td><td>{{ s.name }}</td><td>{{ s.class }}</td><td><select name="status_{{ s.roll_no }}" class="inp py-1.5 px-3 text-sm w-auto">{% for st in attendance_statuses %}<option value="{{ st }}" {% if attendance_map.get(s.roll_no)==st %}selected{% endif %}>{{ st }}</option>{% endfor %}</select></td></tr>
+                    {% else %}<tr><td colspan="4" class="px-4 py-6 text-center text-slate-400 text-xs">No students found.</td></tr>{% endfor %}
+                    </tbody>
+                </table>
+                </div>
+                {% if att_students %} {% include '_pagination_bar.html' %} {% endif %}
+            </div>
+            {% if att_students %}<div class="px-4 py-2 border-t border-slate-100 flex justify-end"><button type="submit" class="btn-teal text-sm py-1.5">Save Attendance</button></div>{% endif %}
+        </form>
+    </div>
+    {% include "_attendance_lookup.html" %}
+</div>
+
+<!-- LIBRARY CRUD -->
+<div data-section="library" class="dashboard-section space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="card p-6"><h3 class="font-extrabold text-slate-800 mb-4">Issue Book</h3>
+            <form action="{{ url_for('issue_book') }}" method="POST" class="space-y-3">
+                <div><label class="lbl">Book</label><select name="book_id" required class="inp"><option value="">Select</option>{% for b in available_books %}<option value="{{ b.book_id }}">{{ b.book_id }} — {{ b.book_name }}</option>{% endfor %}</select></div>
+                <div><label class="lbl">Student</label><select name="roll_no" required class="inp"><option value="">Select</option>{% for s in all_students %}<option value="{{ s.roll_no }}">{{ s.roll_no }} — {{ s.name }}</option>{% endfor %}</select></div>
+                <button type="submit" class="btn-teal w-full">Issue Book</button>
+            </form>
+        </div>
+        <div class="card p-6"><h3 class="font-extrabold text-slate-800 mb-4">Return Book</h3>
+            <form action="{{ url_for('return_book') }}" method="POST" class="space-y-3">
+                <div><label class="lbl">Issued Book</label><select name="book_id" required class="inp"><option value="">Select</option>{% for b in issued_books %}<option value="{{ b.book_id }}">{{ b.book_id }} — {{ b.name or b.issued_to_roll_no }}</option>{% endfor %}</select></div>
+                <button type="submit" class="btn-teal w-full">Return Book</button>
+            </form>
+        </div>
+    </div>
+    <div class="card overflow-hidden bg-white">
+        <div class="px-4 py-2.5 border-b border-slate-100 flex justify-between items-center">
+            <h2 class="text-base font-bold text-slate-800">Library Catalog</h2>
+            <button type="button" onclick="openModal('modal-book-add')" class="btn-teal text-sm py-1.5">+ Add Book</button>
+        </div>
+        <div class="js-table-paginate border-b border-slate-100" data-table-target="table-library" data-page-size="10" data-pagination-page="1">
+            <div class="overflow-x-auto">
+            <table id="table-library" class="data-table min-w-full divide-y divide-gray-200">
+                <thead class="bg-slate-50"><tr>
+                    <th class="text-left">ID</th>
+                    <th class="text-left">Title</th>
+                    <th class="text-left">Author</th>
+                    <th class="text-left">Status</th>
+                    <th class="text-left">Issued To</th>
+                    <th class="text-right">Actions</th>
+                </tr></thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                {% for b in library_books %}
+                <tr class="hover:bg-slate-50" data-page-row>
+                    <td class="font-mono text-teal-600">{{ b.book_id }}</td>
+                    <td class="font-medium text-slate-800">{{ b.book_name }}</td>
+                    <td class="text-slate-600">{{ b.author }}</td>
+                    <td><span class="badge {% if b.status=='Available' %}badge-teal{% else %}badge-amber{% endif %}">{{ b.status }}</span></td>
+                    <td class="text-slate-600">{% if b.issued_to_roll_no %}{{ b.student_name }} ({{ b.issued_to_roll_no }}){% else %}—{% endif %}</td>
+                    <td class="text-right whitespace-nowrap space-x-1">
+                        {{ btn_edit("openBookEdit('" ~ b.book_id ~ "','" ~ b.book_name ~ "','" ~ b.author ~ "','" ~ b.status ~ "','" ~ (b.issued_to_roll_no or '') ~ "')") }}
+                        {{ btn_delete(url_for('delete_book', book_id=b.book_id), 'book ' ~ b.book_id) }}
+                    </td>
+                </tr>
+                {% else %}<tr><td colspan="6" class="px-4 py-6 text-center text-slate-400 text-xs">No books in catalog.</td></tr>{% endfor %}
+                </tbody>
+            </table>
+            </div>
+            {% if library_books %} {% include '_pagination_bar.html' %} {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- REPORTS -->
+<div data-section="reports" class="dashboard-section">
+    <div class="card p-6 lg:p-8">
+        <h2 class="text-lg font-extrabold text-slate-800 mb-2">Generate Report</h2>
+        <p class="text-sm text-slate-500 mb-6">Use Ctrl+P to export as PDF.</p>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100"><p class="text-xs text-slate-500 uppercase">Students</p><p class="text-2xl font-extrabold">{{ total_students }}</p></div>
+            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100"><p class="text-xs text-slate-500 uppercase">Fees</p><p class="text-2xl font-extrabold text-teal-600">₹{{ "%.0f"|format(total_fees) }}</p></div>
+            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100"><p class="text-xs text-slate-500 uppercase">Attendance</p><p class="text-2xl font-extrabold">{{ "%.1f"|format(avg_attendance) }}%</p></div>
+            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100"><p class="text-xs text-slate-500 uppercase">Books</p><p class="text-2xl font-extrabold">{{ book_count }}</p></div>
+        </div>
+        <button type="button" onclick="window.print()" class="btn-teal">Print / Save PDF</button>
+    </div>
+</div>
+
+<!-- NOTICES CRUD -->
+<div data-section="notices" class="dashboard-section">
+    <div class="card overflow-hidden bg-white">
+        <div class="px-4 py-2.5 border-b border-slate-100 flex justify-between items-center">
+            <div><h2 class="text-base font-bold text-slate-800">School Notices</h2><p class="text-xs text-slate-500">{{ all_notices|length }} notice(s)</p></div>
+            <button type="button" onclick="openModal('modal-notice-add')" class="btn-teal text-sm py-1.5">+ Publish Notice</button>
+        </div>
+        <div class="js-table-paginate border-b border-slate-100" data-table-target="table-notices" data-page-size="5" data-pagination-page="1">
+            <div class="overflow-x-auto">
+            <table id="table-notices" class="data-table min-w-full divide-y divide-gray-200">
+                <thead class="bg-slate-50"><tr>
+                    <th class="text-left">Date</th>
+                    <th class="text-left">Title</th>
+                    <th class="text-left">Message</th>
+                    <th class="text-right">Actions</th>
+                </tr></thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                {% for notice in all_notices %}
+                <tr class="hover:bg-slate-50" data-page-row>
+                    <td class="text-slate-500 whitespace-nowrap">{{ notice.date_posted }}</td>
+                    <td class="font-semibold text-slate-800">{{ notice.title }}</td>
+                    <td class="text-slate-600 max-w-md truncate">{{ notice.message }}</td>
+                    <td class="text-right whitespace-nowrap space-x-1">
+                        {{ btn_edit("openNoticeEdit(" ~ notice.id ~ ",'" ~ notice.title|replace("'", "\\'") ~ "','" ~ notice.date_posted ~ "')") }}
+                        {{ btn_delete(url_for('delete_notice', notice_id=notice.id), 'this notice') }}
+                    </td>
+                </tr>
+                {% else %}<tr><td colspan="4" class="px-4 py-6 text-center text-slate-400 text-xs">No notices yet.</td></tr>{% endfor %}
+                </tbody>
+            </table>
+            </div>
+            {% if all_notices %} {% include '_pagination_bar.html' %} {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- ACADEMIC EVENTS (Admin CRUD) -->
+<div data-section="events" class="dashboard-section">
+    <div class="grid grid-cols-1 xl:grid-cols-5 gap-6">
+        <div class="xl:col-span-2 card p-6">
+            <h2 class="text-lg font-extrabold text-slate-800 mb-4">Add Academic Event</h2>
+            <form action="{{ url_for('add_event') }}" method="POST" class="space-y-4">
+                <div><label class="lbl">Event Name *</label><input name="event_name" required class="inp"></div>
+                <div><label class="lbl">Event Date *</label><input type="date" name="event_date" value="{{ today }}" required class="inp"></div>
+                <div><label class="lbl">Description *</label><textarea name="event_description" rows="4" required class="inp resize-none"></textarea></div>
+                <button type="submit" class="btn-teal w-full">Add Event</button>
+            </form>
+        </div>
+        <div class="xl:col-span-3 card overflow-hidden bg-white">
+            <div class="px-4 py-2.5 border-b border-slate-100"><h2 class="text-base font-bold text-slate-800">Academic Events Calendar</h2><p class="text-xs text-slate-500">{{ all_events|length }} event(s) · sorted by date</p></div>
+            <div class="js-table-paginate border-b border-slate-100" data-table-target="table-events" data-page-size="5" data-pagination-page="1">
+            <div class="overflow-x-auto">
+                <table id="table-events" class="data-table min-w-full divide-y divide-gray-200">
+                    <thead class="bg-slate-50"><tr>
+                        <th class="text-left">Date</th>
+                        <th class="text-left">Event</th>
+                        <th class="text-left">Description</th>
+                        <th class="text-right">Actions</th>
+                    </tr></thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    {% for ev in all_events %}
+                    <tr class="hover:bg-slate-50" data-page-row>
+                        <td class="whitespace-nowrap font-semibold text-teal-600">{{ ev.event_date }}</td>
+                        <td class="font-semibold text-slate-800">{{ ev.event_name }}</td>
+                        <td class="text-slate-600 max-w-xs truncate">{{ ev.event_description }}</td>
+                        <td class="text-right">{{ btn_delete(url_for('delete_event', event_id=ev.id), 'event ' ~ ev.event_name) }}</td>
+                    </tr>
+                    {% else %}<tr><td colspan="4" class="px-4 py-6 text-center text-slate-400 text-xs">No events scheduled yet.</td></tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if all_events %} {% include '_pagination_bar.html' %} {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "_settings_section.html" %}
+
+<!-- ═══ MODALS ═══ -->
+<div id="modal-overlay" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="if(event.target===this)closeAllModals()">
+
+<!-- Add Student -->
+<div id="modal-student-add" class="modal-panel hidden w-full max-w-2xl bg-white rounded-2xl shadow-xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+    <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center"><h3 class="font-extrabold text-slate-800">Add Student</h3><button type="button" onclick="closeAllModals()" class="text-slate-400 hover:text-slate-600 text-xl">&times;</button></div>
+    <form action="{{ url_for('add_student') }}" method="POST" class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div><label class="lbl">Roll No *</label><input name="roll_no" required pattern="[0-9]+" class="inp"></div>
+        <div><label class="lbl">Name *</label><input name="name" required pattern="[A-Za-z\s]+" class="inp"></div>
+        <div><label class="lbl">Class *</label><input name="class" required class="inp"></div>
+        <div><label class="lbl">Section</label><input name="section" class="inp"></div>
+        <div><label class="lbl">Gender</label><select name="gender" class="inp"><option value="">—</option><option>Male</option><option>Female</option></select></div>
+        <div><label class="lbl">DOB</label><input type="date" name="dob" class="inp"></div>
+        <div class="sm:col-span-2"><label class="lbl">Contact</label><input name="contact" class="inp"></div>
+        <div class="sm:col-span-2 flex gap-3 justify-end"><button type="button" onclick="closeAllModals()" class="btn-outline">Cancel</button><button type="submit" class="btn-teal">Save Student</button></div>
+    </form>
+</div>
+
+<!-- Edit Student -->
+<div id="modal-student-edit" class="modal-panel hidden w-full max-w-2xl bg-white rounded-2xl shadow-xl border border-slate-100">
+    <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center"><h3 class="font-extrabold text-slate-800">Edit Student</h3><button type="button" onclick="closeAllModals()" class="text-slate-400 hover:text-slate-600 text-xl">&times;</button></div>
+    <form id="form-student-edit" method="POST" class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div><label class="lbl">Roll No</label><input id="edit-student-roll-display" readonly class="inp bg-slate-100"></div>
+        <div><label class="lbl">Name *</label><input name="name" id="edit-student-name" required pattern="[A-Za-z\s]+" class="inp"></div>
+        <div><label class="lbl">Class *</label><input name="class" id="edit-student-class" required class="inp"></div>
+        <div><label class="lbl">Section</label><input name="section" id="edit-student-section" class="inp"></div>
+        <div><label class="lbl">Gender</label><select name="gender" id="edit-student-gender" class="inp"><option value="">—</option><option>Male</option><option>Female</option></select></div>
+        <div><label class="lbl">DOB</label><input type="date" name="dob" id="edit-student-dob" class="inp"></div>
+        <div class="sm:col-span-2"><label class="lbl">Contact</label><input name="contact" id="edit-student-contact" class="inp"></div>
+        <div class="sm:col-span-2 flex gap-3 justify-end"><button type="button" onclick="closeAllModals()" class="btn-outline">Cancel</button><button type="submit" class="btn-teal">Update Student</button></div>
+    </form>
+</div>
+
+<!-- Add Teacher -->
+<div id="modal-teacher-add" class="modal-panel hidden w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100">
+    <div class="px-6 py-4 border-b border-slate-100 flex justify-between"><h3 class="font-extrabold text-slate-800">Add Teacher</h3><button type="button" onclick="closeAllModals()" class="text-slate-400 text-xl">&times;</button></div>
+    <form action="{{ url_for('add_user') }}" method="POST" class="p-6 space-y-4">
+        <input type="hidden" name="role" value="Teacher">
+        <div><label class="lbl">Username *</label><input name="username" required class="inp"></div>
+        <div><label class="lbl">Password *</label><input type="password" name="password" required class="inp"></div>
+        <div class="flex gap-3 justify-end"><button type="button" onclick="closeAllModals()" class="btn-outline">Cancel</button><button type="submit" class="btn-teal">Create Teacher</button></div>
+    </form>
+</div>
+
+<!-- Edit Teacher -->
+<div id="modal-teacher-edit" class="modal-panel hidden w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100">
+    <div class="px-6 py-4 border-b border-slate-100 flex justify-between"><h3 class="font-extrabold text-slate-800">Edit Teacher</h3><button type="button" onclick="closeAllModals()" class="text-slate-400 text-xl">&times;</button></div>
+    <form id="form-teacher-edit" method="POST" class="p-6 space-y-4">
+        <div><label class="lbl">Username *</label><input name="username" id="edit-teacher-username" required class="inp"></div>
+        <div><label class="lbl">New Password</label><input type="password" name="password" id="edit-teacher-password" placeholder="Leave blank to keep current" class="inp"></div>
+        <div class="flex gap-3 justify-end"><button type="button" onclick="closeAllModals()" class="btn-outline">Cancel</button><button type="submit" class="btn-teal">Update Teacher</button></div>
+    </form>
+</div>
+
+<!-- Add Fee -->
+<div id="modal-fee-add" class="modal-panel hidden w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100">
+    <div class="px-6 py-4 border-b border-slate-100 flex justify-between"><h3 class="font-extrabold text-slate-800">Record Fee Payment</h3><button type="button" onclick="closeAllModals()" class="text-slate-400 text-xl">&times;</button></div>
+    <form action="{{ url_for('add_fee') }}" method="POST" class="p-6 space-y-4">
+        <div><label class="lbl">Student *</label><select name="roll_no" required class="inp"><option value="">Select</option>{% for s in all_students %}<option value="{{ s.roll_no }}">{{ s.roll_no }} — {{ s.name }}</option>{% endfor %}</select></div>
+        <div><label class="lbl">Amount (₹) *</label><input type="number" name="amount_paid" required min="0.01" step="0.01" class="inp"></div>
+        <div><label class="lbl">Date *</label><input type="date" name="payment_date" value="{{ today }}" required class="inp"></div>
+        <div><label class="lbl">Status</label><select name="status" class="inp">{% for st in fee_statuses %}<option>{{ st }}</option>{% endfor %}</select></div>
+        <div class="flex gap-3 justify-end"><button type="button" onclick="closeAllModals()" class="btn-outline">Cancel</button><button type="submit" class="btn-teal">Save Payment</button></div>
+    </form>
+</div>
+
+<!-- Edit Fee -->
+<div id="modal-fee-edit" class="modal-panel hidden w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100">
+    <div class="px-6 py-4 border-b border-slate-100 flex justify-between"><h3 class="font-extrabold text-slate-800">Edit Fee Record</h3><button type="button" onclick="closeAllModals()" class="text-slate-400 text-xl">&times;</button></div>
+    <form id="form-fee-edit" method="POST" class="p-6 space-y-4">
+        <div><label class="lbl">Invoice</label><input id="edit-fee-invoice-display" readonly class="inp bg-slate-100"></div>
+        <div><label class="lbl">Student *</label><select name="roll_no" id="edit-fee-roll" required class="inp">{% for s in all_students %}<option value="{{ s.roll_no }}">{{ s.roll_no }} — {{ s.name }}</option>{% endfor %}</select></div>
+        <div><label class="lbl">Amount (₹) *</label><input type="number" name="amount_paid" id="edit-fee-amount" required min="0.01" step="0.01" class="inp"></div>
+        <div><label class="lbl">Date *</label><input type="date" name="payment_date" id="edit-fee-date" required class="inp"></div>
+        <div><label class="lbl">Status</label><select name="status" id="edit-fee-status" class="inp">{% for st in fee_statuses %}<option>{{ st }}</option>{% endfor %}</select></div>
+        <div class="flex gap-3 justify-end"><button type="button" onclick="closeAllModals()" class="btn-outline">Cancel</button><button type="submit" class="btn-teal">Update Fee</button></div>
+    </form>
+</div>
+
+<!-- Add Book -->
+<div id="modal-book-add" class="modal-panel hidden w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100">
+    <div class="px-6 py-4 border-b border-slate-100 flex justify-between"><h3 class="font-extrabold text-slate-800">Add Book</h3><button type="button" onclick="closeAllModals()" class="text-slate-400 text-xl">&times;</button></div>
+    <form action="{{ url_for('add_book') }}" method="POST" class="p-6 space-y-4">
+        <div><label class="lbl">Book ID *</label><input name="book_id" required class="inp"></div>
+        <div><label class="lbl">Title *</label><input name="book_name" required class="inp"></div>
+        <div><label class="lbl">Author *</label><input name="author" required class="inp"></div>
+        <div class="flex gap-3 justify-end"><button type="button" onclick="closeAllModals()" class="btn-outline">Cancel</button><button type="submit" class="btn-teal">Add Book</button></div>
+    </form>
+</div>
+
+<!-- Edit Book -->
+<div id="modal-book-edit" class="modal-panel hidden w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100">
+    <div class="px-6 py-4 border-b border-slate-100 flex justify-between"><h3 class="font-extrabold text-slate-800">Edit Book</h3><button type="button" onclick="closeAllModals()" class="text-slate-400 text-xl">&times;</button></div>
+    <form id="form-book-edit" method="POST" class="p-6 space-y-4">
+        <div><label class="lbl">Book ID</label><input id="edit-book-id-display" readonly class="inp bg-slate-100"></div>
+        <div><label class="lbl">Title *</label><input name="book_name" id="edit-book-name" required class="inp"></div>
+        <div><label class="lbl">Author *</label><input name="author" id="edit-book-author" required class="inp"></div>
+        <div><label class="lbl">Status</label><select name="status" id="edit-book-status" class="inp"><option>Available</option><option>Issued</option></select></div>
+        <div><label class="lbl">Issued To (Roll)</label><select name="issued_to_roll_no" id="edit-book-issued" class="inp"><option value="">—</option>{% for s in all_students %}<option value="{{ s.roll_no }}">{{ s.roll_no }} — {{ s.name }}</option>{% endfor %}</select></div>
+        <div class="flex gap-3 justify-end"><button type="button" onclick="closeAllModals()" class="btn-outline">Cancel</button><button type="submit" class="btn-teal">Update Book</button></div>
+    </form>
+</div>
+
+<!-- Add Notice -->
+<div id="modal-notice-add" class="modal-panel hidden w-full max-w-lg bg-white rounded-2xl shadow-xl border border-slate-100">
+    <div class="px-6 py-4 border-b border-slate-100 flex justify-between"><h3 class="font-extrabold text-slate-800">Publish Notice</h3><button type="button" onclick="closeAllModals()" class="text-slate-400 text-xl">&times;</button></div>
+    <form action="{{ url_for('add_notice') }}" method="POST" class="p-6 space-y-4">
+        <div><label class="lbl">Title *</label><input name="title" required class="inp"></div>
+        <div><label class="lbl">Date *</label><input type="date" name="date_posted" value="{{ today }}" required class="inp"></div>
+        <div><label class="lbl">Message *</label><textarea name="message" rows="4" required class="inp resize-none"></textarea></div>
+        <div class="flex gap-3 justify-end"><button type="button" onclick="closeAllModals()" class="btn-outline">Cancel</button><button type="submit" class="btn-teal">Publish</button></div>
+    </form>
+</div>
+
+<!-- Edit Notice -->
+<div id="modal-notice-edit" class="modal-panel hidden w-full max-w-lg bg-white rounded-2xl shadow-xl border border-slate-100">
+    <div class="px-6 py-4 border-b border-slate-100 flex justify-between"><h3 class="font-extrabold text-slate-800">Edit Notice</h3><button type="button" onclick="closeAllModals()" class="text-slate-400 text-xl">&times;</button></div>
+    <form id="form-notice-edit" method="POST" class="p-6 space-y-4">
+        <div><label class="lbl">Title *</label><input name="title" id="edit-notice-title" required class="inp"></div>
+        <div><label class="lbl">Date *</label><input type="date" name="date_posted" id="edit-notice-date" required class="inp"></div>
+        <div><label class="lbl">Message *</label><textarea name="message" id="edit-notice-message" rows="4" required class="inp resize-none"></textarea></div>
+        <div class="flex gap-3 justify-end"><button type="button" onclick="closeAllModals()" class="btn-outline">Cancel</button><button type="submit" class="btn-teal">Update Notice</button></div>
+    </form>
+</div>
+
+</div><!-- /overlay -->
+
+<!-- Hidden notice messages for edit (populated via data attributes) -->
+{% for notice in all_notices %}
+<textarea id="notice-msg-{{ notice.id }}" class="hidden">{{ notice.message }}</textarea>
+{% endfor %}
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function openModal(id) {
+    closeAllModals();
+    document.getElementById('modal-overlay').classList.remove('hidden');
+    document.getElementById(id).classList.remove('hidden');
+}
+function closeAllModals() {
+    document.getElementById('modal-overlay').classList.add('hidden');
+    document.querySelectorAll('.modal-panel').forEach(el => el.classList.add('hidden'));
+}
+function openStudentEdit(roll, name, cls, section, gender, dob, contact) {
+    document.getElementById('form-student-edit').action = '/admin/edit_student/' + roll;
+    document.getElementById('edit-student-roll-display').value = roll;
+    document.getElementById('edit-student-name').value = name;
+    document.getElementById('edit-student-class').value = cls;
+    document.getElementById('edit-student-section').value = section;
+    document.getElementById('edit-student-gender').value = gender;
+    document.getElementById('edit-student-dob').value = dob;
+    document.getElementById('edit-student-contact').value = contact;
+    openModal('modal-student-edit');
+}
+function openTeacherEdit(id, username) {
+    document.getElementById('form-teacher-edit').action = '/admin/edit_teacher/' + id;
+    document.getElementById('edit-teacher-username').value = username;
+    document.getElementById('edit-teacher-password').value = '';
+    openModal('modal-teacher-edit');
+}
+function openFeeEdit(invoice, roll, amount, date, status) {
+    document.getElementById('form-fee-edit').action = '/admin/edit_fee/' + invoice;
+    document.getElementById('edit-fee-invoice-display').value = '#' + invoice;
+    document.getElementById('edit-fee-roll').value = roll;
+    document.getElementById('edit-fee-amount').value = amount;
+    document.getElementById('edit-fee-date').value = date;
+    document.getElementById('edit-fee-status').value = status;
+    openModal('modal-fee-edit');
+}
+function openBookEdit(id, name, author, status, issued) {
+    document.getElementById('form-book-edit').action = '/admin/edit_book/' + encodeURIComponent(id);
+    document.getElementById('edit-book-id-display').value = id;
+    document.getElementById('edit-book-name').value = name;
+    document.getElementById('edit-book-author').value = author;
+    document.getElementById('edit-book-status').value = status;
+    document.getElementById('edit-book-issued').value = issued;
+    openModal('modal-book-edit');
+}
+function openNoticeEdit(id, title, date) {
+    document.getElementById('form-notice-edit').action = '/admin/edit_notice/' + id;
+    document.getElementById('edit-notice-title').value = title;
+    document.getElementById('edit-notice-date').value = date;
+    document.getElementById('edit-notice-message').value = document.getElementById('notice-msg-' + id).value;
+    openModal('modal-notice-edit');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAllModals(); });
+window.setupTableFilters = function () {
+    initTableFilter('filter-students', 'table-students');
+    initTableFilter('filter-fees', 'table-fees');
+    initTableFilter('filter-grades', 'table-grades');
+};
+</script>
+{% endblock %}

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Receipt #{{ receipt.invoice_no }} — SMS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background: #fff !important; }
+            .receipt-card { box-shadow: none !important; border: 1px solid #e2e8f0 !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen py-8 px-4">
+
+<div class="max-w-2xl mx-auto">
+    <div class="no-print flex justify-between items-center mb-6">
+        <a href="{{ url_for('dashboard') }}#fees" class="text-sm text-teal-600 hover:text-teal-800 font-semibold">← Back to Dashboard</a>
+        <button type="button" onclick="window.print()" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-4 py-2 rounded-xl text-sm">🖨 Print Receipt</button>
+    </div>
+
+    <div class="receipt-card bg-white border border-slate-200 rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-teal-600 to-teal-500 px-8 py-6 text-white">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-teal-100 text-xs uppercase tracking-widest font-semibold">School Management System</p>
+                    <h1 class="text-2xl font-extrabold mt-1">Fee Payment Receipt</h1>
+                </div>
+                <div class="text-right">
+                    <p class="text-teal-100 text-xs uppercase">Invoice</p>
+                    <p class="text-2xl font-extrabold">#{{ receipt.invoice_no }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-8 py-6 space-y-6">
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <p class="text-[10px] uppercase font-semibold text-slate-400 tracking-wide">Student Name</p>
+                    <p class="font-extrabold text-slate-800 mt-1">{{ receipt.student_name }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase font-semibold text-slate-400 tracking-wide">Roll Number</p>
+                    <p class="font-mono font-bold text-teal-600 mt-1">{{ receipt.roll_no }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase font-semibold text-slate-400 tracking-wide">Class</p>
+                    <p class="font-semibold text-slate-800 mt-1">Class {{ receipt.class }}{% if receipt.section %} — {{ receipt.section }}{% endif %}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase font-semibold text-slate-400 tracking-wide">Payment Date</p>
+                    <p class="font-semibold text-slate-800 mt-1">{{ receipt.payment_date }}</p>
+                </div>
+            </div>
+
+            <div class="border-t border-b border-slate-100 py-5">
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-600 font-medium">Amount Paid</span>
+                    <span class="text-3xl font-extrabold text-teal-600">₹{{ "%.2f"|format(receipt.amount_paid) }}</span>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-slate-500">Payment Status</span>
+                <span class="text-sm font-bold px-3 py-1 rounded-full {% if receipt.status == 'Paid' %}bg-teal-50 text-teal-700{% elif receipt.status == 'Partial' %}bg-amber-50 text-amber-700{% else %}bg-rose-50 text-rose-700{% endif %}">{{ receipt.status }}</span>
+            </div>
+
+            <p class="text-xs text-slate-400 text-center pt-4 border-t border-slate-100">
+                This is a computer-generated receipt. No signature required.<br>
+                Generated on {{ today }} · School Management System ERP
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+window.addEventListener('load', function () {
+    setTimeout(function () { window.print(); }, 400);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+{# Student attendance lookup panel — include on Admin & Teacher dashboards #}
+<div class="card overflow-hidden bg-white mt-4">
+    <div class="px-4 py-2.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div>
+            <h2 class="text-base font-bold text-slate-800">Check Student Attendance</h2>
+            <p class="text-xs text-slate-500">View attendance history and summary for any student</p>
+        </div>
+    </div>
+    <div class="p-4 bg-slate-50/50 border-b border-slate-100">
+        <form method="GET" action="{{ url_for('dashboard') }}#attendance" class="flex flex-wrap gap-3 items-end">
+            {% if attendance_date is defined %}
+            <input type="hidden" name="date" value="{{ attendance_date }}">
+            {% endif %}
+            {% if class_filter is defined %}
+            <input type="hidden" name="class" value="{{ class_filter }}">
+            {% endif %}
+            <div class="min-w-[220px] flex-1">
+                <label class="lbl" for="att_roll">Student *</label>
+                <select name="att_roll" id="att_roll" required class="inp">
+                    <option value="">Select student</option>
+                    {% for s in all_students %}
+                    <option value="{{ s.roll_no }}" {% if att_lookup_roll == s.roll_no %}selected{% endif %}>
+                        {{ s.roll_no }} — {{ s.name }} (Class {{ s.class }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn-teal text-sm py-1.5">View Attendance</button>
+            {% if att_lookup_roll %}
+            <a href="{{ url_for('dashboard') }}#attendance" class="btn-outline">Clear</a>
+            {% endif %}
+        </form>
+    </div>
+
+    {% if att_lookup_error %}
+    <div class="px-4 py-3">
+        <div class="flex items-start gap-2 bg-rose-50 border border-rose-100 text-rose-800 px-3 py-2 rounded-lg text-xs">
+            {{ att_lookup_error }}
+        </div>
+    </div>
+    {% elif att_lookup_student %}
+    <div class="px-4 py-3 border-b border-slate-100 bg-white">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+            <div>
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Student</p>
+                <p class="text-base font-bold text-slate-800 mt-0.5">{{ att_lookup_student.name }}</p>
+                <p class="text-xs text-slate-500 mt-0.5">
+                    Roll <span class="font-mono text-teal-600">{{ att_lookup_student.roll_no }}</span>
+                    · Class {{ att_lookup_student.class }}{% if att_lookup_student.section %} · Section {{ att_lookup_student.section }}{% endif %}
+                </p>
+            </div>
+            <div class="bg-teal-50 border border-teal-100 rounded-lg px-4 py-2 text-center shrink-0">
+                <p class="text-[10px] uppercase text-teal-600 font-semibold">Overall Rate</p>
+                <p class="text-2xl font-bold text-slate-800">{{ "%.0f"|format(att_lookup_rate) }}%</p>
+            </div>
+        </div>
+        <div class="mt-4">
+            <div class="w-full bg-slate-200 rounded-full h-2.5">
+                <div class="bg-teal-500 h-2.5 rounded-full transition-all" style="width:{{ att_lookup_rate|int }}%"></div>
+            </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2 mt-3">
+            <div class="bg-teal-50 border border-teal-100 rounded-lg p-2 text-center">
+                <p class="text-[10px] uppercase text-teal-600 font-semibold">Present</p>
+                <p class="text-lg font-bold text-slate-800">{{ att_lookup_summary.get('Present', 0) }}</p>
+            </div>
+            <div class="bg-amber-50 border border-amber-100 rounded-lg p-2 text-center">
+                <p class="text-[10px] uppercase text-amber-600 font-semibold">Late</p>
+                <p class="text-lg font-bold text-slate-800">{{ att_lookup_summary.get('Late', 0) }}</p>
+            </div>
+            <div class="bg-rose-50 border border-rose-100 rounded-lg p-2 text-center">
+                <p class="text-[10px] uppercase text-rose-600 font-semibold">Absent</p>
+                <p class="text-lg font-bold text-slate-800">{{ att_lookup_summary.get('Absent', 0) }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="js-table-paginate border-b border-slate-100" data-table-target="table-att-lookup" data-page-size="10" data-pagination-page="1">
+    <div class="overflow-x-auto">
+        <table id="table-att-lookup" class="data-table min-w-full divide-y divide-gray-200">
+            <thead class="bg-slate-50">
+                <tr>
+                    <th class="text-left">Date</th>
+                    <th class="text-left">Status</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+            {% for rec in att_lookup_records %}
+                <tr class="hover:bg-slate-50" data-page-row>
+                    <td class="font-medium text-slate-800">{{ rec.attendance_date }}</td>
+                    <td>
+                        <span class="badge {% if rec.status=='Present' %}badge-teal{% elif rec.status=='Late' %}badge-amber{% else %}badge-rose{% endif %}">{{ rec.status }}</span>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="2" class="px-4 py-6 text-center text-slate-400 text-xs">No attendance records for this student yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if att_lookup_records %} {% include '_pagination_bar.html' %} {% endif %}
+    </div>
+    {% else %}
+    <div class="px-4 py-8 text-center text-slate-400 text-xs">
+        Select a student above to view their attendance history.
+    </div>
+    {% endif %}
+</div>

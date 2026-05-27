@@ -1,0 +1,244 @@
+{% extends "base_dashboard.html" %}
+{% block title %}Student Portal{% endblock %}
+{% block page_heading %}Student Portal{% endblock %}
+{% block page_subheading %}Your profile, academics & campus resources{% endblock %}
+
+{% block sidebar_nav %}
+<a href="#profile" data-nav="profile" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">
+    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg> My Profile</a>
+<a href="#report-card" data-nav="report-card" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">
+    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Report Card</a>
+<a href="#timetable" data-nav="timetable" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">
+    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg> Timetable</a>
+<a href="#attendance" data-nav="attendance" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">
+    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg> Attendance</a>
+<a href="#fees" data-nav="fees" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">
+    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg> Fee Receipts</a>
+<a href="#library" data-nav="library" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">
+    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg> Library</a>
+<a href="#notices" data-nav="notices" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">
+    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg> Notices</a>
+<a href="#events" data-nav="events" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">
+    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg> Events</a>
+<a href="#settings" data-nav="settings" class="nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 transition">
+    <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg> Settings</a>
+{% endblock %}
+
+{% block right_panel %}
+<aside class="hidden xl:flex flex-col w-80 shrink-0 border-l border-slate-100 bg-white/60 p-6 gap-6 overflow-y-auto">
+    {% if student and marks %}
+    <div class="card p-5">
+        <h3 class="text-sm font-extrabold text-slate-800 mb-4">Mini Report Card</h3>
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center text-lg font-bold">{{ student.name[0]|upper }}</div>
+            <div><p class="font-semibold text-slate-800">{{ student.name }}</p><p class="text-xs text-slate-500">Roll {{ student.roll_no }}</p></div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+            {% for m in marks[:2] %}
+            {% set pct = mark_pct(m) %}
+            {% set grade = mark_grade(m) %}
+            <div class="text-center bg-slate-50 rounded-xl p-3 border border-slate-100">
+                <p class="text-[10px] text-slate-500 uppercase truncate">{{ m.subject }}</p>
+                <div class="relative w-14 h-14 mx-auto my-2">
+                    <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#f1f5f9" stroke-width="3"/><circle cx="18" cy="18" r="15" fill="none" stroke="#14b8a6" stroke-width="3" stroke-dasharray="{{ pct|int }} 100" stroke-linecap="round"/></svg>
+                    <span class="absolute inset-0 flex items-center justify-center text-xs font-bold text-slate-800">{{ pct|int }}%</span>
+                </div>
+                <span class="badge {{ grade|grade_badge }} text-[10px]">{{ grade }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    <div>
+        <h3 class="text-sm font-extrabold text-slate-800 mb-3">Campus Updates</h3>
+        <div class="space-y-3">
+            {% for notice in notices[:4] %}
+            <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                <p class="text-sm font-medium text-slate-800">{{ notice.title }}</p>
+                <p class="text-[11px] text-slate-400 mt-1">{{ notice.date_posted }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% include "_events_widget.html" %}
+</aside>
+{% endblock %}
+
+{% block content %}
+
+{% if not student %}
+<div class="bg-amber-50 border border-amber-100 text-amber-800 px-4 py-3 rounded-xl text-sm mb-6">No student record linked. Contact the administrator.</div>
+{% endif %}
+
+<!-- PROFILE -->
+<div data-section="profile" class="dashboard-section space-y-6">
+    {% if student %}
+    <div class="card p-6 lg:p-8 bg-gradient-to-r from-white to-teal-50/30">
+        <div class="flex flex-col lg:flex-row lg:items-center gap-6">
+            <div class="w-20 h-20 rounded-2xl bg-teal-500 text-white flex items-center justify-center text-3xl font-extrabold shadow-lg shadow-teal-500/20">{{ student.name[0]|upper }}</div>
+            <div class="flex-1">
+                <h2 class="text-2xl font-extrabold text-slate-800">{{ student.name }}</h2>
+                <p class="text-slate-500 mt-1">Roll <span class="font-mono text-teal-600 font-semibold">{{ student.roll_no }}</span> · Class {{ student.class }}{% if student.section %} — {{ student.section }}{% endif %}</p>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+                <div class="bg-white rounded-xl p-4 border border-slate-100 text-center shadow-sm"><p class="text-[10px] uppercase text-slate-500">Overall</p><p class="text-xl font-extrabold text-slate-800">{{ "%.1f"|format(overall_percentage) }}%</p></div>
+                <div class="bg-white rounded-xl p-4 border border-slate-100 text-center shadow-sm"><p class="text-[10px] uppercase text-slate-500">Attendance</p><p class="text-xl font-extrabold text-teal-600">{{ "%.0f"|format(attendance_rate) }}%</p></div>
+                <div class="bg-white rounded-xl p-4 border border-slate-100 text-center shadow-sm"><p class="text-[10px] uppercase text-slate-500">Fees Paid</p><p class="text-xl font-extrabold text-teal-600">₹{{ "%.0f"|format(total_fees_paid) }}</p></div>
+            </div>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="card p-5"><p class="text-xs uppercase text-slate-500 mb-1">Gender</p><p class="font-semibold text-slate-800">{{ student.gender or '—' }}</p></div>
+        <div class="card p-5"><p class="text-xs uppercase text-slate-500 mb-1">Date of Birth</p><p class="font-semibold text-slate-800">{{ student.dob or '—' }}</p></div>
+        <div class="card p-5"><p class="text-xs uppercase text-slate-500 mb-1">Contact</p><p class="font-semibold text-slate-800">{{ student.contact or '—' }}</p></div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- REPORT CARD -->
+<div data-section="report-card" class="dashboard-section">
+    <div class="card overflow-hidden">
+        <div class="px-4 py-2.5 border-b border-slate-100"><h2 class="text-base font-bold text-slate-800">Report Card</h2></div>
+        {% if marks %}
+        <div class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 border-b border-slate-100 bg-slate-50/30">
+            {% for m in marks %}
+            {% set pct = mark_pct(m) %}
+            {% set grade = mark_grade(m) %}
+            <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+                <div class="flex justify-between mb-2"><p class="text-sm font-semibold text-slate-800 truncate">{{ m.subject }}</p><span class="badge {{ grade|grade_badge }}">{{ grade }}</span></div>
+                <p class="text-2xl font-extrabold text-teal-600">{{ "%.1f"|format(pct) }}%</p>
+                <p class="text-xs text-slate-400 mt-1">{{ m.exam_type }} · {{ m.marks_obtained|int }}/{{ m.total_marks|int }}</p>
+                <div class="w-full bg-slate-100 rounded-full h-2 mt-2"><div class="bg-teal-500 h-2 rounded-full" style="width:{{ pct }}%"></div></div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="js-table-paginate border-b border-slate-100" data-table-target="table-student-marks" data-page-size="10" data-pagination-page="1">
+        <div class="overflow-x-auto"><table id="table-student-marks" class="tbl data-table"><thead><tr><th>Subject</th><th>Obtained</th><th>Total</th><th>%</th><th>Grade</th><th>Exam</th></tr></thead><tbody>
+        {% for m in marks %}
+        {% set pct = mark_pct(m) %}
+        {% set grade = mark_grade(m) %}
+        <tr data-page-row><td class="font-medium">{{ m.subject }}</td><td class="text-teal-600 font-semibold">{{ m.marks_obtained|int }}</td><td>{{ m.total_marks|int }}</td><td class="font-semibold text-teal-600">{{ "%.1f"|format(pct) }}%</td><td><span class="badge {{ grade|grade_badge }}">{{ grade }}</span></td><td><span class="badge badge-slate">{{ m.exam_type }}</span></td></tr>
+        {% endfor %}
+        </tbody></table></div>
+        {% include '_pagination_bar.html' %}
+        </div>
+        {% else %}<p class="empty">No marks recorded yet.</p>{% endif %}
+    </div>
+</div>
+
+<!-- TIMETABLE -->
+<div data-section="timetable" class="dashboard-section">
+    <div class="card overflow-hidden">
+        <div class="px-6 py-5 border-b border-slate-100"><h2 class="text-lg font-extrabold text-slate-800">Weekly Timetable</h2><p class="text-sm text-slate-500">Class {{ student.class if student else '—' }}</p></div>
+        {% if timetable %}
+        <div class="overflow-x-auto p-4 lg:p-6">
+            <div class="min-w-[600px]">
+                <div class="grid grid-cols-5 gap-2 mb-2 text-[10px] font-semibold uppercase text-slate-400 px-1"><div>Day</div><div class="text-center">Period 1</div><div class="text-center">Period 2</div><div class="text-center">Period 3</div><div class="text-center">Period 4</div></div>
+                {% for row in timetable %}
+                <div class="grid grid-cols-5 gap-2 mb-2">
+                    <div class="bg-teal-50 text-teal-700 font-semibold rounded-xl px-3 py-3 text-sm border border-teal-100">{{ row.day[:3] }}</div>
+                    <div class="tt-cell {% if row.period_1 %}tt-active{% endif %}">{{ row.period_1 or '—' }}</div>
+                    <div class="tt-cell {% if row.period_2 %}tt-active{% endif %}">{{ row.period_2 or '—' }}</div>
+                    <div class="tt-cell {% if row.period_3 %}tt-active{% endif %}">{{ row.period_3 or '—' }}</div>
+                    <div class="tt-cell {% if row.period_4 %}tt-active{% endif %}">{{ row.period_4 or '—' }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}<p class="empty">No timetable available.</p>{% endif %}
+    </div>
+</div>
+
+<!-- ATTENDANCE -->
+<div data-section="attendance" class="dashboard-section">
+    <div class="card overflow-hidden">
+        <div class="px-4 py-2.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div><h2 class="text-base font-bold text-slate-800">My Attendance</h2></div>
+            <div class="bg-teal-50 border border-teal-100 rounded-lg px-4 py-1.5 text-center"><p class="text-[10px] uppercase text-teal-600 font-semibold">Overall Rate</p><p class="text-xl font-bold text-slate-800">{{ "%.0f"|format(attendance_rate) }}%</p></div>
+        </div>
+        <div class="px-4 py-2 border-b border-slate-100 bg-slate-50/50">
+            <p class="text-xs text-slate-500 mb-1">Attendance Progress</p>
+            <div class="w-full bg-slate-200 rounded-full h-2"><div class="bg-teal-500 h-2 rounded-full transition-all" style="width:{{ attendance_rate|int }}%"></div></div>
+        </div>
+        <div class="js-table-paginate border-b border-slate-100" data-table-target="table-student-attendance" data-page-size="10" data-pagination-page="1">
+        <div class="overflow-x-auto"><table id="table-student-attendance" class="tbl data-table"><thead><tr><th>Date</th><th>Status</th></tr></thead><tbody>
+        {% for rec in attendance_records %}<tr data-page-row><td class="font-medium">{{ rec.attendance_date }}</td><td><span class="badge {% if rec.status=='Present' %}badge-teal{% elif rec.status=='Late' %}badge-amber{% else %}badge-rose{% endif %}">{{ rec.status }}</span></td></tr>
+        {% else %}<tr><td colspan="2" class="empty">No attendance records yet.</td></tr>{% endfor %}
+        </tbody></table></div>
+        {% if attendance_records %} {% include '_pagination_bar.html' %} {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- FEES -->
+<div data-section="fees" class="dashboard-section">
+    <div class="card overflow-hidden">
+        <div class="px-4 py-2.5 border-b border-slate-100 flex justify-between items-center">
+            <h2 class="text-base font-bold text-slate-800">Fee Receipts</h2>
+            <div class="text-right"><p class="text-[10px] uppercase text-slate-500">Total Paid</p><p class="text-lg font-bold text-teal-600">₹{{ "%.0f"|format(total_fees_paid) }}</p></div>
+        </div>
+        <div class="js-table-paginate border-b border-slate-100" data-table-target="table-student-fees" data-page-size="5" data-pagination-page="1">
+        <div class="overflow-x-auto"><table id="table-student-fees" class="tbl data-table"><thead><tr><th>Invoice</th><th>Amount</th><th>Date</th><th>Status</th><th>Receipt</th></tr></thead><tbody>
+        {% for f in fee_records %}<tr data-page-row><td class="text-slate-400">#{{ f.invoice_no }}</td><td class="font-semibold text-teal-700">₹{{ "%.0f"|format(f.amount_paid) }}</td><td>{{ f.payment_date }}</td><td><span class="badge {% if f.status=='Paid' %}badge-teal{% elif f.status=='Partial' %}badge-amber{% else %}badge-rose{% endif %}">{{ f.status }}</span></td><td>{% if f.status == 'Paid' %}<a href="{{ url_for('view_receipt', invoice_no=f.invoice_no) }}" target="_blank" class="text-teal-600 hover:text-teal-900 font-semibold text-xs">📄 Receipt</a>{% else %}—{% endif %}</td></tr>
+        {% else %}<tr><td colspan="5" class="empty">No fee payments recorded.</td></tr>{% endfor %}
+        </tbody></table></div>
+        {% if fee_records %} {% include '_pagination_bar.html' %} {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- LIBRARY -->
+<div data-section="library" class="dashboard-section">
+    <div class="card overflow-hidden">
+        <div class="px-4 py-2.5 border-b border-slate-100 flex justify-between items-center">
+            <h2 class="text-base font-bold text-slate-800">Library Logs</h2>
+            <span class="badge badge-teal">{{ library_books|length }} book(s) issued</span>
+        </div>
+        <div class="js-table-paginate border-b border-slate-100" data-table-target="table-student-library" data-page-size="5" data-pagination-page="1">
+        <div class="overflow-x-auto"><table id="table-student-library" class="tbl data-table"><thead><tr><th>Book ID</th><th>Title</th><th>Author</th><th>Status</th></tr></thead><tbody>
+        {% for book in library_books %}<tr data-page-row><td class="font-mono text-teal-600">{{ book.book_id }}</td><td class="font-medium">{{ book.book_name }}</td><td>{{ book.author }}</td><td><span class="badge badge-amber">{{ book.status }}</span></td></tr>
+        {% else %}<tr><td colspan="4" class="empty">No books currently issued.</td></tr>{% endfor %}
+        </tbody></table></div>
+        {% if library_books %} {% include '_pagination_bar.html' %} {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- NOTICES -->
+<div data-section="notices" class="dashboard-section">
+    <div class="card overflow-hidden">
+        <div class="px-6 py-5 border-b border-slate-100"><h2 class="text-lg font-extrabold text-slate-800">School Notices</h2></div>
+        <div class="divide-y divide-slate-100">
+            {% for notice in notices %}
+            <article class="px-6 py-5 hover:bg-slate-50 transition"><div class="flex justify-between gap-2 mb-2"><h3 class="font-semibold text-slate-800">{{ notice.title }}</h3><time class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-lg shrink-0">{{ notice.date_posted }}</time></div><p class="text-sm text-slate-500 leading-relaxed">{{ notice.message }}</p></article>
+            {% else %}<p class="empty">No notices at this time.</p>{% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- EVENTS -->
+<div data-section="events" class="dashboard-section">
+    <div class="card p-6 lg:p-8">
+        <h2 class="text-lg font-extrabold text-slate-800 mb-2">Upcoming Academic Events</h2>
+        <p class="text-sm text-slate-500 mb-6">Stay informed about important school dates</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% for ev in upcoming_events %}
+            <div class="flex gap-4 p-4 bg-white border border-slate-100 rounded-xl hover:border-teal-100 transition">
+                <div class="w-14 shrink-0 text-center bg-teal-50 rounded-xl py-2 border border-teal-100">
+                    <p class="text-[10px] uppercase font-bold text-teal-600">{{ ev.event_date[5:7] }}/{{ ev.event_date[8:10] }}</p>
+                    <p class="text-lg font-extrabold text-slate-800">{{ ev.event_date[0:4] }}</p>
+                </div>
+                <div><p class="font-semibold text-slate-800">{{ ev.event_name }}</p><p class="text-sm text-slate-500 mt-1">{{ ev.event_description }}</p></div>
+            </div>
+            {% else %}<p class="empty col-span-2">No upcoming events scheduled.</p>{% endfor %}
+        </div>
+    </div>
+</div>
+
+{% include "_settings_section.html" %}
+
+<style>
+.tt-cell { background:#fff; border:1px solid rgb(241 245 249); border-radius:0.75rem; padding:0.75rem; text-align:center; font-size:0.875rem; color:rgb(100 116 139); }
+.tt-active { background:rgb(240 253 250); border-color:rgb(153 246 228); color:rgb(15 118 110); font-weight:600; }
+</style>
+{% endblock %}

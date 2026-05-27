@@ -1,0 +1,23 @@
+# School Management System — required packages
+# Install with: pip install -r requirements.txt
+#
+# Run the web application:
+#   Windows (easiest):  Double-click run_web.bat
+#   Command line:       python web_app.py
+#   Browser:            http://127.0.0.1:5000
+#
+# Initialize / repair database (first run or after schema changes):
+#   python database.py
+#
+# Built-in (no pip install needed):
+#   sqlite3  — database storage
+#   csv      — admin CSV/Excel export
+#   re, io   — validation & export helpers
+#
+# UI: Tailwind CSS v4 via CDN (internet required in browser)
+# Print: fee receipts use the browser's native print dialog (window.print)
+
+Flask>=3.0.0
+
+# Optional — run tests
+pytest>=8.0.0
