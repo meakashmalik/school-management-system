@@ -4,7 +4,7 @@ This guide explains how to set up and run the **Flask web application** (light-t
 
 ---
 
-## Quick Start — Viva / Demo Day (Windows)
+## Quick Start — Viva / Demo Day (Windows) 
 
 > **Faida:** Viva ke din bas `run_web.bat` par **Double-Click** karein, browser mein **http://127.0.0.1:5000** open karein — login dashboard turant screen par aa jayega!
 
@@ -23,7 +23,7 @@ Student: student1  / student123  (rolls 1001; also student2→1002, student3→1
 
 ---
 
-## 1. What You Need
+## 1. What You Need 
 
 | Item | Details |
 |------|---------|
@@ -525,3 +525,5 @@ notification_reads → notification_id, username (per-user read for broadcasts)
 ---
 
 **Setup complete.** Viva ke din `run_web.bat` par double-click karein — **http://127.0.0.1:5000** par login dashboard ready hai!
+
+
