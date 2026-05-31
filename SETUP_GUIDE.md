@@ -357,7 +357,7 @@ Automatic notifications are sent when:
 
 ### Admin — Create
 
-| Route | Method | Purpose |
+| Route | Method | Purpose | 
 |-------|--------|---------|
 | `/dashboard/students` | POST | Add student (duplicate roll blocked) |
 | `/dashboard/users` | POST | Add user / teacher (duplicate username blocked) |
@@ -408,7 +408,7 @@ Automatic notifications are sent when:
 
 ---
 
-## 12. Step 8 — Quick Test on New PC
+## 12. Step 8 — Quick Test on New PC  
 
 1. **Double-click** `run_web.bat` → open **http://127.0.0.1:5000**
 2. **Admin:** add a student, try duplicate roll (should error), export CSV, add an event, print a fee receipt
